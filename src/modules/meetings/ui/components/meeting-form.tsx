@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTRPC } from "@/trpc/client";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { MeetingGetOne } from "@/modules/agents/types";
+import { MeetingGetOne } from "../../types";
 import { meetingsInsertSchema } from "../../schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
