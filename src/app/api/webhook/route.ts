@@ -1,6 +1,9 @@
+import OpenAI from "openai";
 import { and, eq, not } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
+import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
 import {
+  MessageNewEvent,
   CallEndedEvent,
   CallTranscriptionReadyEvent,
   CallSessionParticipantLeftEvent,
@@ -11,6 +14,10 @@ import { db } from "@/db";
 import { agents, meetings } from "@/db/schema";
 import { streamVideo } from "@/lib/stream-video";
 import { inngest } from "@/inngest/client";
+import { generateAvatarUri } from "@/lib/avatar";
+import { streamChat } from "@/lib/stream-chat";
+
+const openaiClient = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
 
 function verifySignatureWithSDK(body: string, signature: string): boolean {
   return streamVideo.verifyWebhook(body, signature);
@@ -179,6 +186,159 @@ export async function POST(req: NextRequest) {
         recordingUrl: event.call_recording.url,
       })
       .where(eq(meetings.id, meetingId));
+  } else if (eventType === "message.new") {
+    const event = payload as MessageNewEvent;
+    const userId = event.user?.id;
+    const channelId = event.channel_id;
+    const text = event.message?.text;
+
+    if (!userId || !channelId || !text) {
+      return NextResponse.json(
+        { error: "Missing required fields" },
+        { status: 400 }
+      );
+    }
+
+    let existingMeeting;
+    try {
+      const meetingResult = await db
+        .select()
+        .from(meetings)
+        .where(
+          and(eq(meetings.id, channelId), eq(meetings.status, "completed"))
+        );
+      if (meetingResult.length === 0) {
+        return NextResponse.json(
+          { error: "Meeting not found" },
+          { status: 404 }
+        );
+      }
+      existingMeeting = meetingResult[0];
+    } catch (error) {
+      console.error("Database query failed for meeting:", error);
+      return NextResponse.json(
+        { error: "Database error while fetching meeting" },
+        { status: 500 }
+      );
+    }
+
+    let existingAgent;
+    try {
+      const agentResult = await db
+        .select()
+        .from(agents)
+        .where(eq(agents.id, existingMeeting.agentId));
+      if (agentResult.length === 0) {
+        return NextResponse.json({ error: "Agent not found" }, { status: 404 });
+      }
+      existingAgent = agentResult[0];
+    } catch (error) {
+      console.error("Database query failed for agent:", error);
+      return NextResponse.json(
+        { error: "Database error while fetching agent" },
+        { status: 500 }
+      );
+    }
+
+    if (userId !== existingAgent.id) {
+      const instructions = `
+        You are an AI assistant helping the user revisit a recently completed meeting.
+        Below is a summary of the meeting, generated from the transcript:
+        
+        ${existingMeeting.summary}
+        
+        The following are your original instructions from the live meeting assistant. Please continue to follow these behavioral guidelines as you assist the user:
+        
+        ${existingAgent.instructions}
+        
+        The user may ask questions about the meeting, request clarifications, or ask for follow-up actions.
+        Always base your responses on the meeting summary above.
+        
+        You also have access to the recent conversation history between you and the user. Use the context of previous messages to provide relevant, coherent, and helpful responses. If the user's question refers to something discussed earlier, make sure to take that into account and maintain continuity in the conversation.
+        
+        If the summary does not contain enough information to answer a question, politely let the user know.
+        
+        Be concise, helpful, and focus on providing accurate information from the meeting and the ongoing conversation.
+      `;
+
+      let channel;
+      try {
+        channel = streamChat.channel("messaging", channelId);
+        await channel.watch();
+      } catch (error) {
+        console.error("Failed to watch channel:", error);
+        return NextResponse.json(
+          { error: "Failed to watch channel" },
+          { status: 500 }
+        );
+      }
+
+      const previousMessages = channel.state.messages
+        .slice(-5)
+        .filter((msg) => typeof msg.text === "string" && msg.text.trim() !== "")
+        .map<ChatCompletionMessageParam>((message) => ({
+          role: message.user?.id === existingAgent.id ? "assistant" : "user",
+          content: message.text || "",
+        }));
+
+      let GPTResponse;
+      try {
+        GPTResponse = await openaiClient.chat.completions.create({
+          messages: [
+            { role: "system", content: instructions },
+            ...previousMessages,
+            { role: "user", content: text },
+          ],
+          model: process.env.OPENAI_MODEL || "gpt-4o",
+        });
+      } catch (error) {
+        console.error("OpenAI API error:", error);
+        return NextResponse.json(
+          { error: "Failed to get response from GPT" },
+          { status: 500 }
+        );
+      }
+
+      if (!GPTResponse.choices?.[0]?.message?.content) {
+        return NextResponse.json(
+          { error: "No valid response from GPT" },
+          { status: 500 }
+        );
+      }
+      const GPTResponseText = GPTResponse.choices[0].message.content;
+
+      const avatarUrl = generateAvatarUri({
+        seed: existingAgent.name,
+        variant: "botttsNeutral",
+      });
+
+      try {
+        await streamChat.upsertUser({
+          id: existingAgent.id,
+          name: existingAgent.name,
+          image: avatarUrl,
+        });
+
+        await channel.sendMessage({
+          text: GPTResponseText,
+          user: {
+            id: existingAgent.id,
+            name: existingAgent.name,
+            image: avatarUrl,
+          },
+        });
+      } catch (error) {
+        console.error("Stream Chat error:", error);
+        return NextResponse.json(
+          { error: "Failed to send message" },
+          { status: 500 }
+        );
+      }
+
+      return NextResponse.json(
+        { message: "Message sent successfully" },
+        { status: 200 }
+      );
+    }
   }
-  return NextResponse.json({ status: "ok" });
 }
