@@ -12,7 +12,7 @@ import {
 } from "drizzle-orm";
 import { db } from "@/db";
 import { agents, meetings, user } from "@/db/schema";
-import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
+import { createTRPCRouter, protectedProcedure, premiumProcedure } from "@/trpc/init";
 import { TRPCError } from "@trpc/server";
 
 import {
@@ -26,6 +26,7 @@ import { MeetingStatus, StreamTranscriptItem } from "../types";
 import { streamVideo } from "@/lib/stream-video";
 import { generateAvatarUri } from "@/lib/avatar";
 import { streamChat } from "@/lib/stream-chat";
+
 
 export const meetingsRouter = createTRPCRouter({
   generateChatToken: protectedProcedure.mutation(async ({ ctx }) => {
@@ -193,7 +194,7 @@ export const meetingsRouter = createTRPCRouter({
       return updatedMeeting;
     }),
 
-  create: protectedProcedure
+  create: premiumProcedure("meetings")
     .input(meetingsInsertSchema)
     .mutation(async ({ input, ctx }) => {
       const [createdMeeting] = await db

@@ -53,6 +53,10 @@ export const MeetingForm = ({
           trpc.meetings.getMany.queryOptions({})
         );
 
+        await queryClient.invalidateQueries(
+          trpc.premium.getFreeUsage.queryOptions(),
+        )
+
         onSuccess?.(data.id);
       },
       onError: (error) => {
