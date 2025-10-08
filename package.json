@@ -15,7 +15,7 @@
     "@dicebear/collection": "^9.2.4",
     "@dicebear/core": "^9.2.4",
     "@hookform/resolvers": "^3.3.4",
-    "@inngest/agent-kit": "^0.13.0",
+    "@inngest/agent-kit": "^0.13.1",
     "@neondatabase/serverless": "^1.0.0",
     "@opentelemetry/winston-transport": "^0.16.2",
     "@polar-sh/better-auth": "^1.1.8",
@@ -64,7 +64,7 @@
     "drizzle-orm": "^0.43.1",
     "embla-carousel-react": "^8.6.0",
     "humanize-duration": "^3.33.1",
-    "inngest": "^3.44.1",
+    "inngest": "^3.44.2",
     "input-otp": "^1.4.2",
     "jsonl-parse-stringify": "^1.0.3",
     "lucide-react": "^0.544.0",
@@ -89,7 +89,7 @@
     "stream-chat-react": "^13.7.0",
     "tailwind-merge": "^3.3.1",
     "vaul": "^1.1.2",
-    "zod": "^3.22.4"
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -99,6 +99,8 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/react-highlight-words": "^0.20.0",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
     "drizzle-kit": "^0.31.1",
     "eslint": "^9",
     "eslint-config-next": "15.3.2",
