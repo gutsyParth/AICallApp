@@ -1,36 +1,247 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🤖 My AI — Real-Time AI Video Meetings
 
-## Getting Started
+My AI is a next-generation video calling platform where **AI agents join your meetings live** — not just to transcribe or summarize, but to actively participate.
 
-First, run the development server:
+Every meeting is a real-time call with an AI trained for a specific role:  
+language tutor, interview coach, startup mentor, sales assistant, or fully custom agents.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+Built with modern real-time infrastructure, My AI turns meetings into **interactive, AI-powered work sessions**.
+
+---
+
+# 🚀 What is My AI?
+
+My AI lets you:
+
+- Create meetings just like Zoom or Google Meet  
+- Attach a **custom AI agent** to each meeting  
+- Talk to that AI **live, in real time**  
+- Automatically generate:
+  - Structured summaries  
+  - Full searchable transcripts  
+  - Call recordings  
+  - An AI chat interface that understands the meeting  
+
+This is not post-processing AI.  
+This is **AI inside the meeting.**
+
+---
+
+# 🧠 Core Features
+
+## 🎥 Real-Time AI Video Calls
+- Live meetings powered by **Stream Video SDK**
+- AI agents respond instantly using **OpenAI Realtime API**
+- Familiar lobby experience (camera, mic, join flow)
+
+## 🧩 Custom AI Agents
+- Create agents with custom system instructions  
+- Examples:
+  - Hustle Coach (startup mentor)
+  - Language tutor
+  - Interviewer
+  - Sales coach
+
+## ⚙️ Automated Meeting Processing
+After every call, background workflows automatically:
+
+- Fetch the transcript  
+- Generate structured AI summaries  
+- Store data in the database  
+- Prepare the meeting for search and chat
+
+Powered by **ingest pipelines + agent workflows**
+
+---
+
+## 📄 Meeting Intelligence Dashboard
+
+Each completed meeting includes:
+
+- **AI Summary** – topic-wise breakdown, timestamped  
+- **Transcript** – fully searchable with highlights  
+- **Recording** – replay the entire call  
+- **Meeting Chat** – ask questions about the meeting
+
+Powered by **Stream Chat SDK**
+
+---
+
+# 🧭 How to Use My AI (Step-by-Step SaaS Guide)
+
+## ✅ Step 1 — Sign Up & Log In
+- Create an account
+- Land on the Meetings Dashboard
+- Manage meetings, agents, and plans
+
+---
+
+## ✅ Step 2 — Create Your AI Agent
+
+1. Go to **Agents**
+2. Click **Create Agent**
+3. Enter:
+   - Name
+   - Instructions (role, behavior, tone)
+
+Example:
+```
+Be direct, hyper-driven, and act like a startup founder who just raised a seed round.
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+4. Save the agent
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## ✅ Step 3 — Create a Meeting
 
-## Learn More
+1. Click **New Meeting**
+2. Enter meeting name
+3. Select AI agent
+4. Click **Create Meeting**
 
-To learn more about Next.js, take a look at the following resources:
+Meeting appears as **Upcoming**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## ✅ Step 4 — Join the Lobby
 
-## Deploy on Vercel
+- Start meeting  
+- Configure camera & mic  
+- Join call  
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## ✅ Step 5 — Talk to the AI Live
+
+- AI joins instantly  
+- Speak naturally  
+- AI responds in real time  
+- Brainstorm, simulate, coach, or learn
+
+Powered by:
+- Stream Video SDK  
+- OpenAI Realtime API  
+
+---
+
+## ✅ Step 6 — End Call & Automatic Processing
+
+When the call ends:
+
+- Transcript is generated  
+- Summary is created  
+- Recording is stored  
+- Meeting is indexed for chat & search  
+
+---
+
+## ✅ Step 7 — Review the Meeting
+
+Each meeting includes:
+
+- 📌 AI Summary  
+- 📜 Searchable Transcript  
+- 🎥 Full Recording  
+- 💬 Meeting Chat (ask questions about the call)
+
+---
+
+## ✅ Step 8 — Manage Your Plan
+
+- Free plan with limits  
+- Upgrade when limits are reached  
+- Checkout via **Polar**
+- Premium features unlocked instantly
+
+---
+
+# 🏗️ System Architecture (High Level)
+
+```
+Frontend (My AI UI)
+   |
+   |— Stream Video SDK
+   |— Stream Chat SDK
+   |
+Backend API
+   |
+   |— OpenAI Realtime API
+   |— Ingest pipelines
+   |— Agent workflows
+   |
+Database
+   |
+   |— Meetings
+   |— Agents
+   |— Transcripts
+   |— Summaries
+   |— Subscriptions
+```
+
+---
+
+# 🧰 Tech Stack
+
+**Frontend**
+- React / Next.js  
+- Stream Video SDK  
+- Stream Chat SDK  
+
+**Backend**
+- Node.js / Serverless  
+- OpenAI Realtime API  
+
+**Infrastructure**
+- Background jobs  
+- Database  
+
+**Payments**
+- Polar  
+
+**Authentication**
+- Secure auth provider  
+
+---
+
+# 📌 Example Use Cases
+
+- Startup coaching  
+- Interview practice  
+- Language tutoring  
+- Sales simulations  
+- Standups with AI  
+- Customer discovery  
+- Technical mentoring  
+
+---
+
+# 🎯 Product Vision
+
+My AI aims to become a full **AI Meeting Operating System**:
+
+- Persistent AI collaborators  
+- Cross-meeting memory  
+- Organization-level insights  
+- Semantic search  
+- Automated follow-ups  
+
+---
+
+# 🛠️ Local Development
+
+```bash
+npm install
+cp .env.example .env
+npm run dev
+```
+
+Environment variables include:
+
+- OpenAI keys  
+- Stream keys  
+- Database connection  
+- Polar credentials  
+- Auth secrets  
+
+---
