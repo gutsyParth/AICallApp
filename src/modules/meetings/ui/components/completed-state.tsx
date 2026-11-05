@@ -2,7 +2,7 @@ import Markdown from "react-markdown";
 import Link from "next/link";
 
 import { GeneratedAvatar } from "@/components/generated-avatar";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -11,7 +11,6 @@ import {
   SparklesIcon,
   FileTextIcon,
   BookOpenTextIcon,
-  FileVideoIcon,
   ClockFadingIcon,
 } from "lucide-react";
 import { format } from "date-fns";

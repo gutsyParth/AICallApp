@@ -34,8 +34,6 @@ const statusColorMap = {
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 
-type Meeting = MeetingGetMany[number];
-
 export const columns: ColumnDef<MeetingGetMany[number]>[] = [
   {
     accessorKey: "name",

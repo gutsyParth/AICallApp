@@ -1,5 +1,4 @@
 import { ResponsiveDialog } from "@/components/responsive-dialog";
-import { CommandResponsiveDialog } from "@/components/ui/command";
 
 import { MeetingForm } from "./meeting-form";
 import { useRouter } from "next/navigation";
